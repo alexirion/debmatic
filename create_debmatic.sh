@@ -182,6 +182,47 @@ cd $WORK_DIR
 
 declare -A architectures=(["armhf"]="arm-gnueabihf-gcc8" ["arm64"]="arm-gnueabihf-gcc8" ["i386"]="X86_32_GCC8" ["amd64"]="X86_32_GCC8")
 
+function outputHelp
+{
+    echo "Usage: $0"
+    for ARCH in "${!architectures[@]}"
+    do
+        echo "  [-a $ARCH]"
+    done
+    echo "Builds for all architectures, if no one specified with -a"
+}
+
+selectedArchs=()
+
+while [[ $# -gt 0 ]]
+do
+key="$1"
+case $key in
+    -a)
+    if [[ -z "${architectures[$2]}" ]]; then
+        echo "Invalid architecture $2!"
+        exit 0
+    fi
+    selectedArchs+=("$2")
+    shift
+    shift
+    ;;
+    -h|--help)
+    shift
+    outputHelp
+    exit 0
+    ;;
+    *)
+    echo "Invalid parameter $key !"
+    exit 1 
+    ;;
+esac
+done
+
+if [ ${#selectedArchs[@]} -eq 0 ]; then
+    selectedArchs=("${!architectures[@]}")
+fi
+
 function build_arch_package {
   ARCH=$1
 
@@ -274,7 +315,7 @@ EOF
   run "Create deb" dpkg-deb --build -Zxz debmatic-$PKG_VERSION-$ARCH
 }
 
-for ARCH in "${!architectures[@]}"
+for ARCH in "${selectedArchs[@]}"
 do
   run "Build $ARCH package" build_arch_package $ARCH
 done
