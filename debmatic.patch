@@ -1389,3 +1389,15 @@ diff -ruN --no-dereference fw.3.81.5.orig/www/webui/webui.js fw.3.81.5.debmatic/
    },
  
    // For testing only
+diff -ruN --no-dereference fw.3.81.5.orig/www/config/easymodes/etc/hmipChannelConfigDialogs.tcl fw.3.81.5.debmatic/www/config/easymodes/etc/hmipChannelConfigDialogs.tcl
+--- fw.3.81.5.orig/www/config/easymodes/etc/hmipChannelConfigDialogs.tcl
++++ fw.3.81.5.debmatic/www/config/easymodes/etc/hmipChannelConfigDialogs.tcl
+@@ -191,7 +191,7 @@
+      append html "</tr>"
+   }
+ 
+-  if {$deviceIsDrapOrHap} {
++  if { $deviceIsDrapOrHap == "false" } {
+     set param ROUTER_MODULE_ENABLED
+     if { [info exists ps($param)] == 1  } {
+        incr prn
